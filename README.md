@@ -8,4 +8,7 @@ and converted to grey scale using pictures_converter.py
 
 3271 test images (from 0.jpg to 3270.jpg)
 
-link to tutorial https://stackabuse.com/autoencoders-for-image-reconstruction-in-python-and-keras/
+https://stackabuse.com/autoencoders-for-image-reconstruction-in-python-and-keras/
+
+
+https://arxiv.org/pdf/1603.08511.pdf?fbclid=IwAR0FL4MZpRCvr_X3_upYjTHS8VmRhlGpgq0qmCIOXuhnx4AqG0JLnN369lI
