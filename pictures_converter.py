@@ -21,7 +21,7 @@ for filename in glob.glob("pictures/*." + EXTENSION):
       continue
 
     # resize image
-    im.thumbnail((32, 32), Image.ANTIALIAS)
+    im.thumbnail((56, 56), Image.ANTIALIAS)
 
     # image modes https://pillow.readthedocs.io/en/5.1.x/handbook/concepts.html#modes
     im_rgb, im_grey = im.convert("RGB"), im.convert("L")

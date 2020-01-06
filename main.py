@@ -22,9 +22,12 @@ def normalize(data):
 def renormalize(data):
   return (data + 0.5) * 255
 
-def show_image(data, mode='L'):
+def image_from_matrix(data, mode):
   int_converted = np.clip(data.astype('uint8'), 0, 255)
-  img = Image.fromarray(int_converted, mode)
+  return Image.fromarray(int_converted, mode)
+
+def show_image(data, mode='L'):
+  img = image_from_matrix(data, mode)
   img.show()
   return
 
@@ -64,7 +67,7 @@ autoencoder.compile(optimizer='adamax', loss='mse')
 
 print(autoencoder.summary())
 
-history = autoencoder.fit(x=train_data_in, y=train_data_out, epochs=10, validation_data=[test_data_in, test_data_out])
+history = autoencoder.fit(x=train_data_in, y=train_data_out, epochs=5, validation_data=[test_data_in, test_data_out])
 
 
 plt.plot(history.history['loss'])
@@ -73,4 +76,26 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+
+plt_num = 5
+
+for i in range(plt_num):
+    img = test_data_in[i]
+    img_org = test_data_out[i]
+    reco = decoder.predict(img[None])[0]
+
+    plt.subplot(plt_num,3,1 + i*3)
+    if i == 0: plt.title("Grey sclae")
+    plt.imshow(image_from_matrix(renormalize(img), 'L'))
+
+    plt.subplot(plt_num,3,2 + i*3)
+    if i == 0: plt.title("Colorized")
+    plt.imshow(image_from_matrix(renormalize(reco), 'RGB'))
+
+    plt.subplot(plt_num,3,3 + i*3)
+    if i == 0: plt.title("original Colour")
+    plt.imshow(image_from_matrix(renormalize(img_org), 'RGB'))
+
 plt.show()
