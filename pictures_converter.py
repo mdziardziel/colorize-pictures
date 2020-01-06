@@ -19,6 +19,10 @@ for filename in glob.glob("pictures/*." + EXTENSION):
     if not im.mode in ['RGB', 'RGBA', 'CMYK', 'YCbCr', 'LAB', 'HSV']:
       print(im.mode)
       continue
+
+    # resize image
+    im.thumbnail((32, 32), Image.ANTIALIAS)
+
     # image modes https://pillow.readthedocs.io/en/5.1.x/handbook/concepts.html#modes
     im_rgb, im_grey = im.convert("RGB"), im.convert("L")
     # randomly assign to training or test sets with givrn prob

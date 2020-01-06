@@ -1,30 +1,6 @@
 from PIL import Image
 import numpy as np
 
-
-# # https://stackoverflow.com/a/47227886
-# import os
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
-# os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-# os.environ["CUDA_VISIBLE_DEVICES"]="-1"  # or even "-1"
-
-# import tensorflow as tf
-
-# if tf.test.gpu_device_name():
-#     print('GPU found')
-# else:
-#     print("No GPU found")
-
-
-# print("")
-# print("")
-# print("")
-# print("")
-# print("")
-# print("")
-
-
 from keras.layers import Dense, Flatten, Reshape, Input, InputLayer
 from keras.models import Sequential, Model
 
@@ -52,23 +28,6 @@ def show_image(data, mode='L'):
   img.show()
   return
 
-
-loaded_in = load(0, 'training/grey')
-loaded_out = load(0, 'training/colour')
-
-# show_image(loaded_in)
-# show_image(loaded_out, 'RGB')
-
-normalized_in = normalize(loaded_in)
-normalized_out = normalize(loaded_out)
-
-# renormalized_in = renormalize(normalized_in)
-# renormalized_out = renormalize(normalized_out)
-
-# show_image(renormalized_in)
-# show_image(renormalized_out, 'RGB')
-
-
 def get_data(pics_num, path):
   data = []
   for fname in range(pics_num):
@@ -78,44 +37,35 @@ def get_data(pics_num, path):
   return np.array(data)
 
 
-train_data_in = get_data(20, 'training/grey')
-train_data_out = get_data(20, 'training/colour')
+train_data_in = get_data(7727, 'training/grey')
+train_data_out = get_data(7727, 'training/colour')
 
-test_data_in = get_data(8, 'test/grey')
-test_data_out = get_data(8, 'test/colour')
-
+test_data_in = get_data(3271, 'test/grey')
+test_data_out = get_data(3271, 'test/colour')
 
 def build_autoencoder(in_shape, out_shape):
-  # The encoder
-  encoder = Sequential()
-  encoder.add(InputLayer(in_shape))
-  encoder.add(Flatten())
-  encoder.add(Dense(np.prod(out_shape)))
-
-  # The decoder
   decoder = Sequential()
-  decoder.add(InputLayer((np.prod(out_shape),)))
+  decoder.add(InputLayer(in_shape))
+  decoder.add(Flatten())
   decoder.add(Dense(np.prod(out_shape))) 
   decoder.add(Reshape(out_shape))
-  return encoder, decoder
+  return decoder
 
 INP_SHAPE = train_data_in.shape[1:] # (224, 224, 1)
 OUT_SHAPE = train_data_out.shape[1:] # (224, 224, 3)
 
-# print(INP_SHAPE)
-
-encoder, decoder = build_autoencoder(INP_SHAPE, OUT_SHAPE)
+decoder = build_autoencoder(INP_SHAPE, OUT_SHAPE)
 
 inp = Input(INP_SHAPE)
-code = encoder(inp)
-reconstruction = decoder(code)
+reconstruction = decoder(inp)
 
 autoencoder = Model(inp,reconstruction)
 autoencoder.compile(optimizer='adamax', loss='mse')
 
 print(autoencoder.summary())
 
-history = autoencoder.fit(x=train_data_in, y=train_data_out, epochs=2, validation_data=[test_data_in, test_data_out])
+history = autoencoder.fit(x=train_data_in, y=train_data_out, epochs=10, validation_data=[test_data_in, test_data_out])
+
 
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
