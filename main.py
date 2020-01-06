@@ -37,11 +37,11 @@ def get_data(pics_num, path):
   return np.array(data)
 
 
-train_data_in = get_data(7727, 'training/grey')
-train_data_out = get_data(7727, 'training/colour')
+train_data_in = get_data(7000, 'training/grey')
+train_data_out = get_data(7000, 'training/colour')
 
-test_data_in = get_data(3271, 'test/grey')
-test_data_out = get_data(3271, 'test/colour')
+test_data_in = get_data(3000, 'test/grey')
+test_data_out = get_data(3000, 'test/colour')
 
 def build_autoencoder(in_shape, out_shape):
   decoder = Sequential()
